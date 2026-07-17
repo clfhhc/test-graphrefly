@@ -1,0 +1,6 @@
+[hooks]
+# Enabling corepack installs the pnpm version from package.json packageManager
+postinstall = "npx corepack enable"
+
+[settings]
+experimental = true  # required for hooks
