@@ -10,9 +10,8 @@
     {
       "id": "typecheck",
       "argv": [
-        "pnpm",
-        "exec",
-        "tsc",
+        "node",
+        "node_modules/typescript/bin/tsc",
         "--noEmit"
       ],
       "timeoutMs": 120000,
