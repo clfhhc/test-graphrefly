@@ -1,0 +1,6 @@
+{
+  "schema": "graphrefly.stack.repository.v1",
+  "blueprint": {
+    "entrypoint": "graphrefly-stack.blueprint.mjs"
+  }
+}

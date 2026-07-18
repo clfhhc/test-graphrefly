@@ -10,6 +10,7 @@
 		"@graphrefly/ts": "^0.3.0"
 	},
 	"devDependencies": {
+		"@graphrefly/stack": "0.1.2",
 		"@types/node": "^25.5.0",
 		"tsx": "^4.21.0",
 		"typescript": "^5.7.0"
