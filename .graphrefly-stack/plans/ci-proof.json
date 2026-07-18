@@ -1,0 +1,58 @@
+{
+  "schema": "graphrefly.stack.semantic-plan.v1",
+  "planId": "ci-proof",
+  "taskDigest": {
+    "algorithm": "sha256",
+    "value": "34853e427e5402edfde3fa21f41dcf766b9c8a4bddcc2a88f4b0029f5bc25bcc"
+  },
+  "taskSummary": "Prove published GraphReFly Stack CI parity",
+  "baseCommit": {
+    "algorithm": "sha1",
+    "value": "4b1e6444f6b82187544655a1f45c733946733285"
+  },
+  "baseBlueprintHash": {
+    "algorithm": "sha256",
+    "value": "17ce61c8275fa5f9c258e4f32e414a853784e1413654863994870b0b2ae7b5ee"
+  },
+  "policy": {
+    "policyId": "ci-proof-policy",
+    "revision": "rev-1",
+    "digest": {
+      "algorithm": "sha256",
+      "value": "12d43021c67cf4b9323064252d9d58e5c644930b73d074d5c3dc0860e3eb1266"
+    }
+  },
+  "proposalSource": "human",
+  "acceptedBy": {
+    "label": "PRODUCT-CI verification",
+    "identityVerified": false
+  },
+  "workUnits": [
+    {
+      "id": "CI-PROOF",
+      "title": "Prove the published CI runner",
+      "intent": "Add a bounded source marker while preserving the accepted GraphReFly architecture.",
+      "dependencies": [],
+      "allowedSourceScopes": [
+        "src"
+      ],
+      "capabilities": [],
+      "claims": [
+        {
+          "id": "source-present",
+          "predicate": {
+            "operator": "present",
+            "selector": {
+              "kind": "node",
+              "nodeId": "source"
+            }
+          },
+          "rationale": "The CI proof preserves the source node."
+        }
+      ],
+      "requiredChecks": [
+        "typecheck"
+      ]
+    }
+  ]
+}
