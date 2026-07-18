@@ -1,0 +1,58 @@
+name: GraphReFly Stack
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: graphrefly-stack-${{ github.repository_id }}-pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  semantic-gate:
+    name: GraphReFly Stack / Semantic Gate
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - name: Check out immutable pull-request head
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24.18.0
+      - name: Enable repository-pinned pnpm
+        run: corepack enable
+      - name: Resolve pnpm store
+        id: pnpm-store
+        shell: bash
+        run: echo "path=$(pnpm store path --silent)" >> "$GITHUB_OUTPUT"
+      - name: Restore dependency store
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ steps.pnpm-store.outputs.path }}
+          key: graphrefly-stack-${{ runner.os }}-${{ runner.arch }}-node-24.18.0-manifest-${{ hashFiles('package.json') }}-lock-${{ hashFiles('pnpm-lock.yaml') }}
+      - name: Install frozen dependencies without lifecycle scripts
+        run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Provision deny-network check sandbox
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes --no-install-recommends bubblewrap
+          test -x /usr/bin/bwrap
+      - name: Run GraphReFly Stack semantic gate
+        id: graphrefly_stack
+        run: pnpm exec grfs ci run --event "$GITHUB_EVENT_PATH" --output "$RUNNER_TEMP/graphrefly-stack-ci.json" --json
+      - name: Upload redacted GraphReFly Stack evidence
+        if: ${{ always() && steps.graphrefly_stack.outputs.artifact-name != '' }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: ${{ steps.graphrefly_stack.outputs.artifact-name }}
+          path: ${{ steps.graphrefly_stack.outputs.artifact-path }}
+          retention-days: 7
+          if-no-files-found: error
