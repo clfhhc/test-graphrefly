@@ -1,0 +1,23 @@
+{
+  "schema": "graphrefly.stack.semantic-policy.v1",
+  "policyId": "ci-proof-policy",
+  "revision": "rev-1",
+  "allowedSourceRoots": [
+    "src"
+  ],
+  "allowedCapabilities": [],
+  "checks": [
+    {
+      "id": "typecheck",
+      "argv": [
+        "pnpm",
+        "exec",
+        "tsc",
+        "--noEmit"
+      ],
+      "timeoutMs": 120000,
+      "network": false,
+      "shell": false
+    }
+  ]
+}
